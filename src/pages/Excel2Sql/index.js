@@ -59,10 +59,13 @@ const Excel2Sql = () => {
     accept: '.xlsx,.xls,.csv',
     fileList,
     beforeUpload: (file) => {
-      const isExcel =
+      const ext = (file.name || '').toLowerCase();
+      const byExt = ext.endsWith('.xlsx') || ext.endsWith('.xls') || ext.endsWith('.csv');
+      const byType =
         file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
         file.type === 'application/vnd.ms-excel' ||
         file.type === 'text/csv';
+      const isExcel = byExt || byType;
       if (!isExcel) {
         message.error('只能上传 Excel 或 CSV 文件');
         return false;
@@ -72,8 +75,14 @@ const Excel2Sql = () => {
         message.error('文件大小不能超过 100MB');
         return false;
       }
-      const next = [...fileList, file];
-      setFileList(next);
+      // const next = [...fileList, file];
+      setFileList((prev) => {
+        const exists = prev.some((f) =>
+          f.uid === file.uid || (f.name === file.name && f.size === file.size)
+        );
+        if (exists) return prev;
+        return [...prev, file];
+      });
       setTableNames((prev) => ({
         ...prev,
         [file.uid]: prev[file.uid] ?? normalizeTableName(file.name) // 直接回填默认表名
@@ -84,7 +93,7 @@ const Excel2Sql = () => {
       const index = fileList.indexOf(file);
       const next = fileList.slice();
       next.splice(index, 1);
-      setFileList(next);
+      setFileList((prev) => prev.filter((f) => f.uid !== file.uid));
       setTableNames((prev) => {
         const copy = { ...prev };
         delete copy[file.uid];
