@@ -12,14 +12,6 @@ const Landing = () => {
     const navigate = useNavigate();
     const isLoggedIn = isAuthenticated();
 
-    const handleGetStarted = () => {
-        if (isLoggedIn) {
-            navigate(ROUTES.DASHBOARD);
-        } else {
-            navigate(ROUTES.LOGIN);
-        }
-    };
-
     const goExcel2Sql = () => {
         if (isLoggedIn) {
             navigate(ROUTES.EXCEL2SQL);
@@ -125,11 +117,6 @@ const Landing = () => {
                         </Card>
                     </Space>
                 </div>
-
-                {/* 可保留原来的“开始使用”按钮作为兜底入口 */}
-                <Button type="primary" size="large" onClick={handleGetStarted}>
-                    开始使用
-                </Button>
             </Content>
         </Layout>
     );

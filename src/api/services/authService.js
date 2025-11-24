@@ -39,3 +39,12 @@ export const getUserInfo = async () => {
     const response = await apiClient.get(API_ENDPOINTS.GET_USER_INFO);
     return response;
 };
+
+// 注册
+export const register = async ({ email, password }) => {
+  if (process.env.REACT_APP_USE_MOCK_AUTH === 'true') {
+    return { success: true };
+  }
+  const response = await apiClient.post(API_ENDPOINTS.REGISTER, { email, password });
+  return response;
+};

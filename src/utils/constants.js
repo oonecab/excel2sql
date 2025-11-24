@@ -3,6 +3,7 @@ export const API_ENDPOINTS = {
 	LOGOUT: '/auth/logout',
 	REFRESH_TOKEN: '/auth/refresh',
 	GET_USER_INFO: '/auth/userinfo',
+	REGISTER: '/auth/register',
 	EXCEL_UPLOAD: '/api/excel/upload'
 };
 
@@ -18,5 +19,6 @@ export const ROUTES = {
 	DASHBOARD: '/dashboard',
 	EXCEL2SQL: '/excel2sql',
 	TEXT2SQL: '/text2sql',
-	GALLERY: '/gallery'
+	GALLERY: '/gallery',
+	REGISTER: '/register'
 };
