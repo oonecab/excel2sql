@@ -14,9 +14,6 @@ export const useAuth = () => {
     const handleLogin = useCallback(async (credentials) => {
         setLoading(true);
         try {
-            // 假设后端返回格式：{ token: 'xxx', refreshToken: 'xxx', userInfo: 
-            { }
-
             const data = await authService.login(credentials);
 
             // 保存 token

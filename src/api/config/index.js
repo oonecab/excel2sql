@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { message } from 'antd';
 import { getAccessToken, clearAuth } from '../../utils/storage';
-import { API_ENDPOINTS } from '../../utils/constants';
 
 // 创建 axios 实例
 const apiClient = axios.create({
