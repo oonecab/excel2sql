@@ -1,12 +1,33 @@
 import { render, screen } from '@testing-library/react';
-import App from './App';
+import { MemoryRouter } from 'react-router-dom';
+import Landing from './pages/Landing';
+import { STORAGE_KEYS } from './utils/constants';
 
-test('renders landing page logo', () => {
-  render(<App />);
-  expect(screen.getByRole('heading', { name: '数据转 SQL 工具集' })).toBeInTheDocument();
+beforeEach(() => {
+  window.localStorage.clear();
 });
 
-test('renders get started button', () => {
-  render(<App />);
-  expect(screen.getByRole('button', { name: '开始使用' })).toBeInTheDocument();
+afterEach(() => {
+  jest.restoreAllMocks();
+});
+
+test('renders landing page title', () => {
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <Landing />
+    </MemoryRouter>
+  );
+  expect(screen.getByRole('heading', { name: '数据转 SQL 工具集' }))
+    .toBeInTheDocument();
+});
+
+test('renders dashboard button when authenticated', () => {
+  window.localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, 'test-token');
+  render(
+    <MemoryRouter initialEntries={['/']}>
+      <Landing />
+    </MemoryRouter>
+  );
+  expect(screen.getByRole('button', { name: '进入工作台' }))
+    .toBeInTheDocument();
 });
