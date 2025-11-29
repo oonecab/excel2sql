@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
-import { Layout, Typography, Card, Input, Button, message } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import { Layout, Typography, Card, Input, Button, message, Upload, Select, Space } from 'antd';
+import { ArrowLeftOutlined, InboxOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { ROUTES } from '../../utils/constants';
+import * as text2sqlService from '../../api/services/text2sqlService';
 
 const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
+const { Dragger } = Upload;
+
+const DB_OPTIONS = [
+  { label: 'MySQL', value: 'mysql' },
+  { label: 'PostgreSQL', value: 'pgsql' },
+  { label: 'SQL Server', value: 'sqlserver' },
+  { label: 'SQLite', value: 'sqlite' }
+];
 
 const Text2Sql = () => {
   const { user, logout } = useAuth();
@@ -15,6 +24,9 @@ const Text2Sql = () => {
   const [text, setText] = useState('');
   const [sql, setSql] = useState('');
   const [loading, setLoading] = useState(false);
+  const [uploadingSchema, setUploadingSchema] = useState(false);
+  const [dbType, setDbType] = useState(null);
+  const [schemaJson, setSchemaJson] = useState(null);
 
   const handleGenerate = async () => {
     if (!text.trim()) {
@@ -23,15 +35,77 @@ const Text2Sql = () => {
     }
     setLoading(true);
     try {
-      // TODO: 调用后端生成 SQL 的 API
-      // const { sql } = await api.generateSqlFromText(text);
-      // 先模拟结果
-      await new Promise((r) => setTimeout(r, 1000));
-      setSql('-- 这是模拟的 SQL 结果\nSELECT * FROM your_table WHERE ...;');
+      const resp = await text2sqlService.generateSql({
+        requirements: text,
+        schema: schemaJson,
+        dbType
+      });
+      const finalSql = resp?.sql ?? resp?.data?.sql ?? '';
+      setSql(finalSql);
     } catch (e) {
-      message.error('生成失败，请稍后重试');
+      message.error(e?.message || '生成失败，请稍后重试');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const uploadProps = {
+    name: 'file',
+    multiple: false,
+    accept: '.xlsx,.xls',
+    beforeUpload: async (file) => {
+      const ext = (file.name || '').toLowerCase();
+      const byExt = ext.endsWith('.xlsx') || ext.endsWith('.xls');
+      const byType =
+        file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+        file.type === 'application/vnd.ms-excel';
+      const isExcel = byExt || byType;
+      if (!isExcel) {
+        message.error('只能上传 Excel 文件');
+        return false;
+      }
+      const isLt100M = file.size / 1024 / 1024 < 100;
+      if (!isLt100M) {
+        message.error('文件大小不能超过 100MB');
+        return false;
+      }
+      if (!dbType) {
+        message.warning('请先选择数据库类型');
+        return false;
+      }
+      setUploadingSchema(true);
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('dbType', dbType);
+        const resp = await text2sqlService.uploadSchemaExcel(formData);
+        const parsedSchema = resp?.schema ?? resp?.data?.schema ?? resp;
+        setSchemaJson(parsedSchema);
+        message.success('表结构解析成功');
+        if (text.trim()) {
+          setLoading(true);
+          try {
+            const gen = await text2sqlService.generateSql({
+              requirements: text,
+              schema: parsedSchema,
+              dbType
+            });
+            const finalSql = gen?.sql ?? gen?.data?.sql ?? '';
+            setSql(finalSql);
+          } catch (e) {
+            message.error(e?.message || '生成失败，请稍后重试');
+          } finally {
+            setLoading(false);
+          }
+        } else {
+          message.info('已解析表结构，请输入需求后生成');
+        }
+      } catch (e) {
+        message.error(e?.message || '解析失败，请稍后重试');
+      } finally {
+        setUploadingSchema(false);
+      }
+      return false;
     }
   };
 
@@ -60,7 +134,24 @@ const Text2Sql = () => {
       <Content style={{ padding: 50 }}>
         <Card style={{ maxWidth: 900, margin: '0 auto' }}>
           <Title level={2}>文本转 SQL</Title>
-          <Paragraph type="secondary">输入自然语言描述，生成对应的 SQL</Paragraph>
+          <Paragraph type="secondary">上传表结构并输入需求，自动生成 SQL</Paragraph>
+
+          <Space style={{ marginTop: 12 }}>
+            <span>数据库类型</span>
+            <Select
+              placeholder="请选择数据库"
+              options={DB_OPTIONS}
+              value={dbType}
+              onChange={setDbType}
+              style={{ minWidth: 220 }}
+            />
+          </Space>
+
+          <Dragger {...uploadProps} style={{ marginTop: 16 }}>
+            <p className="ant-upload-drag-icon"><InboxOutlined /></p>
+            <p className="ant-upload-text">点击或拖拽 Excel 文件到此区域上传</p>
+            <p className="ant-upload-hint">支持 .xlsx/.xls | 最大 100MB</p>
+          </Dragger>
 
           <TextArea
             rows={6}
@@ -71,7 +162,7 @@ const Text2Sql = () => {
           />
 
           <div style={{ marginTop: 16 }}>
-            <Button type="primary" onClick={handleGenerate} loading={loading}>
+            <Button type="primary" onClick={handleGenerate} loading={loading || uploadingSchema} disabled={uploadingSchema}>
               生成 SQL
             </Button>
           </div>
