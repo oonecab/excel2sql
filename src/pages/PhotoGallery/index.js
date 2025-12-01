@@ -35,6 +35,9 @@ const PhotoGallery = () => {
         </div>
         <div className="user-info">
           <span>欢迎, {user?.username || '用户'}</span>
+          <Button type="link" onClick={() => navigate(ROUTES.PROFILE)}>
+            用户信息
+          </Button>
           <Button type="link" icon={<ArrowLeftOutlined />} onClick={() => navigate(ROUTES.LANDING)}>
             返回首页
           </Button>

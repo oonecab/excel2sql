@@ -42,13 +42,16 @@ const Landing = () => {
                     <div className="logo">Excel2SQL</div>
                     <div>
                         {isLoggedIn ? (
-                            <Button type="primary" onClick={() =>
-                                navigate(ROUTES.DASHBOARD)}>
-                                进入工作台
-                            </Button>
+                            <>
+                                <Button type="primary" onClick={() => navigate(ROUTES.DASHBOARD)}>
+                                    进入工作台
+                                </Button>
+                                <Button style={{ marginLeft: 8 }} onClick={() => navigate(ROUTES.PROFILE)}>
+                                    用户信息
+                                </Button>
+                            </>
                         ) : (
-                            <Button type="primary" onClick={() =>
-                                navigate(ROUTES.LOGIN)}>
+                            <Button type="primary" onClick={() => navigate(ROUTES.LOGIN)}>
                                 登录
                             </Button>
                         )}

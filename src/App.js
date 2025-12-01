@@ -11,6 +11,7 @@ import PhotoGallery from './pages/PhotoGallery';
 import PrivateRoute from './components/PrivateRoute';
 import { ROUTES } from './utils/constants';
 import Register from './pages/Register';
+import UserProfile from './pages/UserProfile';
 import './App.css';
 
 function App() {
@@ -18,12 +19,10 @@ function App() {
     <ConfigProvider locale={zhCN}>
       <BrowserRouter>
         <Routes>
-          {/* 公开页面 - 不需要登录 */}
           <Route path={ROUTES.LANDING} element={<Landing />} />
           <Route path={ROUTES.LOGIN} element={<Login />} />
           <Route path={ROUTES.REGISTER} element={<Register />} />
 
-          {/* 受保护的页面 - 需要登录 */}
           <Route
             path={ROUTES.DASHBOARD}
             element={
@@ -56,6 +55,15 @@ function App() {
             element={
               <PrivateRoute>
                 <PhotoGallery />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
+            path={ROUTES.PROFILE}
+            element={
+              <PrivateRoute>
+                <UserProfile />
               </PrivateRoute>
             }
           />

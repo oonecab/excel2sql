@@ -11,14 +11,14 @@ const Register = () => {
   const navigate = useNavigate();
 
   const onFinish = async (values) => {
-    const { email, password, confirmPassword } = values;
+    const { email, username, password, confirmPassword } = values;
     if (password !== confirmPassword) {
       message.error('两次密码不一致');
       return;
     }
     setLoading(true);
     try {
-      await authService.register({ email, password });
+      await authService.register({ email, username, password });
       message.success('注册成功，请登录');
       navigate(ROUTES.LOGIN);
     } catch (e) {
@@ -37,7 +37,7 @@ const Register = () => {
           onFinish={onFinish}
           autoComplete="off"
           size="large"
-          initialValues={{ email: '', password: '', confirmPassword: '' }}
+          initialValues={{ email: '', username: '', password: '', confirmPassword: '' }}
         >
           <Form.Item
             name="email"
@@ -47,6 +47,16 @@ const Register = () => {
             ]}
           >
             <Input placeholder="邮箱" />
+          </Form.Item>
+
+          <Form.Item
+            name="username"
+            rules={[
+              { required: true, message: '请输入用户名' },
+              { min: 3, message: '用户名至少3个字符' }
+            ]}
+          >
+            <Input placeholder="用户名" />
           </Form.Item>
 
           <Form.Item

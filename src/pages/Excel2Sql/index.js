@@ -270,16 +270,17 @@ const Excel2Sql = () => {
 
   return (
     <Layout className="upload-layout">
-      <Header className="upload-header">
+      <Header className="excel2sql-header">
         <div className="logo" onClick={() => navigate(ROUTES.LANDING)}>Excel2SQL</div>
         <div className="user-info">
           <span>欢迎, {user?.username || '用户'}</span>
+          <Button type="link" onClick={() => navigate(ROUTES.PROFILE)}>用户信息</Button>
           <Button type="link" onClick={logout}>退出登录</Button>
         </div>
       </Header>
 
-      <Content className="upload-content">
-        <Card className="upload-card">
+      <Content className="excel2sql-content">
+        <Card className="excel2sql-card">
           <Title level={2}>上传 Excel 文件并配置转换</Title>
           <Paragraph type="secondary">支持格式：.xlsx, .xls, .csv | 最大文件大小：100MB</Paragraph>
 

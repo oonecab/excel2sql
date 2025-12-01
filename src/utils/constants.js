@@ -4,6 +4,7 @@ export const API_ENDPOINTS = {
 	REFRESH_TOKEN: '/auth/refresh',
 	GET_USER_INFO: '/auth/userinfo',
 	REGISTER: '/auth/register',
+	UPDATE_USER_INFO: '/auth/userinfo',
 	EXCEL_UPLOAD: '/api/excel/upload',
 	TEXT2SQL_SCHEMA_UPLOAD: '/api/text2sql/upload-schema',
 	LLM_GENERATE_SQL: '/api/llm/generate-sql'
@@ -22,5 +23,6 @@ export const ROUTES = {
 	EXCEL2SQL: '/excel2sql',
 	TEXT2SQL: '/text2sql',
 	GALLERY: '/gallery',
-	REGISTER: '/register'
+	REGISTER: '/register',
+	PROFILE: '/profile'
 };
