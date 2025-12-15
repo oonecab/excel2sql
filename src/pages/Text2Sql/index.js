@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Layout, Typography, Card, Input, Button, message, Upload, Select, Space } from 'antd';
+import { Layout, Typography, Card, Input, Button, message, Upload, Select, Space, Grid } from 'antd';
 import { ArrowLeftOutlined, InboxOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
@@ -10,6 +10,7 @@ const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
 const { Dragger } = Upload;
+const { useBreakpoint } = Grid;
 
 const DB_OPTIONS = [
   { label: 'MySQL', value: 'mysql' },
@@ -21,6 +22,8 @@ const DB_OPTIONS = [
 const Text2Sql = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const screens = useBreakpoint();
+  const isMobile = screens.xs;
   const [text, setText] = useState('');
   const [sql, setSql] = useState('');
   const [loading, setLoading] = useState(false);
@@ -111,7 +114,15 @@ const Text2Sql = () => {
 
   return (
     <Layout style={{ minHeight: '100vh', background: '#f0f2f5' }}>
-      <Header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#001529', color: '#fff', padding: '0 50px' }}>
+      <Header style={{
+        display: 'flex',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        background: '#001529',
+        color: '#fff',
+        padding: isMobile ? '0 16px' : '0 50px',
+        paddingTop: 'var(--safe-top)'
+      }}>
         <div className="logo" onClick={() => navigate('/dashboard')}>
           Text2SQL
         </div>
@@ -134,38 +145,48 @@ const Text2Sql = () => {
         </div>
       </Header>
 
-      <Content style={{ padding: 50 }}>
+      <Content style={{ padding: isMobile ? 16 : 50 }}>
         <Card style={{ maxWidth: 900, margin: '0 auto' }}>
-          <Title level={2}>文本转 SQL</Title>
+          <Title level={isMobile ? 3 : 2}>文本转 SQL</Title>
           <Paragraph type="secondary">上传表结构并输入需求，自动生成 SQL</Paragraph>
 
-          <Space style={{ marginTop: 12 }}>
+          <Space direction={isMobile ? 'vertical' : 'horizontal'} align="start" style={{ width: '100%' }}>
             <span>数据库类型</span>
             <Select
               placeholder="请选择数据库"
               options={DB_OPTIONS}
               value={dbType}
               onChange={setDbType}
-              style={{ minWidth: 220 }}
+              style={{ width: isMobile ? '100%' : 220 }}
             />
           </Space>
 
-          <Dragger {...uploadProps} style={{ marginTop: 16 }}>
-            <p className="ant-upload-drag-icon"><InboxOutlined /></p>
-            <p className="ant-upload-text">点击或拖拽 Excel 文件到此区域上传</p>
-            <p className="ant-upload-hint">支持 .xlsx/.xls | 最大 100MB</p>
-          </Dragger>
+          <div style={{ display: isMobile ? 'block' : 'flex', gap: 16, width: '100%' }}>
+            <Dragger
+              {...uploadProps}
+              style={isMobile ? { width: '100%' } : { flex: 1, minWidth: 0 }}
+            >
+              <p className="ant-upload-drag-icon"><InboxOutlined /></p>
+              <p className="ant-upload-text">点击或拖拽 Excel 文件到此区域上传</p>
+              <p className="ant-upload-hint">支持 .xlsx/.xls | 最大 100MB</p>
+            </Dragger>
 
-          <TextArea
-            rows={6}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder="例如：查询 2024 年销售额最高的前 10 个产品"
-            style={{ marginTop: 16 }}
-          />
+            <TextArea
+              rows={6}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="例如：查询 2024 年销售额最高的前 10 个产品"
+              style={isMobile ? { width: '100%' } : { flex: 1, minWidth: 0 }}
+            />
+          </div>
 
           <div style={{ marginTop: 16 }}>
-            <Button type="primary" onClick={handleGenerate} loading={loading || uploadingSchema} disabled={uploadingSchema}>
+            <Button type="primary"
+              onClick={handleGenerate}
+              loading={loading || uploadingSchema}
+              disabled={uploadingSchema}
+              block={isMobile}
+            >
               生成 SQL
             </Button>
           </div>

@@ -1,3 +1,12 @@
+@media (max-width: 768px) {
+  .gallery-header { padding: 0 16px; }
+  .gallery-content { padding: 16px; }
+  .container { padding: 0 1rem; min-height: 360px; }
+  .card:hover { flex-basis: 50%; }
+  .gallery-item, .card picture { aspect-ratio: 4/3; }
+}
+.container { -webkit-overflow-scrolling: touch; }
+
 .gallery-layout {
   min-height: 100vh;
   background: linear-gradient(to bottom, #eff5ff, #c3cfe2);

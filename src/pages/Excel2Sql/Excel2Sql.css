@@ -1,63 +1,97 @@
+@media (max-width: 576px) {
+  .excel2sql-header {
+    padding: 0 16px;
+    padding-top: var(--safe-top)
+  }
+
+  .excel2sql-content {
+    padding: 16px
+  }
+
+  .excel2sql-card {
+    padding: 16px
+  }
+
+  .db-form-row {
+    gap: 8px
+  }
+
+  .db-select,
+  .table-name-input {
+    width: 100%;
+    max-width: none;
+  }
+
+  .upload-dragger {
+    width: 100%
+  }
+
+  .result-wrapper {
+    width: 100%;
+    max-width: none;
+  }
+}
+
 .excel2sql-layout {
-    min-height: 100vh;
-    background: #f0f2f5;
+  min-height: 100vh;
+  background: #f0f2f5;
 }
 
 .excel2sql-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: #001529;
-    color: white;
-    padding: 0 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #001529;
+  color: white;
+  padding: 0 50px;
 }
 
 .logo {
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: color 0.3s;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: color 0.3s;
 }
 
 .logo:hover {
-    color: #1890ff;
+  color: #1890ff;
 }
 
 .user-info {
-    display: flex;
-    align-items: center;
-    gap: 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
 .excel2sql-content {
-    padding: 50px;
-    min-height: calc(100vh - 64px);
+  padding: 50px;
+  min-height: calc(100vh - 64px);
 }
 
 .excel2sql-card {
-    max-width: 900px;
-    margin: 0 auto;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin: 0 auto;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .excel2sql-dragger {
-    margin: 24px 0;
-    padding: 20px;
+  margin: 24px 0;
+  padding: 20px;
 }
 
 .excel2sql-dragger .ant-upload-drag-icon {
-    font-size: 72px;
-    color: #1890ff;
+  font-size: 72px;
+  color: #1890ff;
 }
 
 .file-list-section {
-    margin-top: 32px;
-    padding-top: 24px;
-    border-top: 1px solid #f0f0f0;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
 }
 
 .file-list-section .ant-table {
-    margin-top: 16px;
+  margin-top: 16px;
 }
 
 .db-form-row {
@@ -86,13 +120,16 @@
   gap: 12px;
   margin: 12px 0 20px;
 }
+
 .db-form-label {
   font-size: 14px;
   color: #595959;
 }
+
 .db-select {
   min-width: 220px;
 }
+
 .table-name-input {
   max-width: 260px;
 }
@@ -101,12 +138,15 @@
   max-width: 1000px;
   margin: 24px auto 0;
 }
+
 .result-card {
   margin-top: 12px;
 }
+
 .sql-section {
   margin-top: 12px;
 }
+
 .sql-textarea {
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
 }

@@ -1,3 +1,8 @@
+@media (max-width: 768px) {
+  .dashboard-header { padding: 0 16px; }
+  .dashboard-content { padding: 16px; }
+}
+
 .dashboard-layout {
     min-height: 100vh;
 }

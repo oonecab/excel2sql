@@ -13,6 +13,13 @@
   }
 }
 
+@media (max-width: 768px) {
+  .logo { font-size: 18px; }
+  .user-info { gap: 8px; }
+  .ant-typography { word-break: break-word; }
+  .ant-btn { font-size: 14px; height: 36px; }
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;

@@ -28,6 +28,7 @@ const Login = () => {
                     onFinish={onFinish}
                     autoComplete="off"
                     size="large"
+                    layout="vertical"
                     initialValues={{ username: 'dev@local', password: '123456', remember: true }}
                 >
                     <Form.Item

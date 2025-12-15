@@ -11,7 +11,8 @@ import {
   Tag,
   Select,
   Input,
-  Divider
+  Divider,
+  Grid
 } from 'antd';
 import {
   UploadOutlined,
@@ -30,6 +31,7 @@ const { Header, Content } = Layout;
 const { Title, Paragraph } = Typography;
 const { Dragger } = AntUpload;
 const { TextArea } = Input;
+const { useBreakpoint } = Grid;
 
 const DB_OPTIONS = [
   { label: 'MySQL', value: 'mysql' },
@@ -52,6 +54,8 @@ const Excel2Sql = () => {
   const [dbType, setDbType] = useState(null);
   const [tableNames, setTableNames] = useState({});
   const [results, setResults] = useState([]);
+  const screens = useBreakpoint();
+  const isMobile = screens.xs;
 
   const uploadProps = {
     name: 'file',
@@ -270,7 +274,7 @@ const Excel2Sql = () => {
 
   return (
     <Layout className="upload-layout">
-      <Header className="excel2sql-header">
+      <Header className="excel2sql-header" style={{ paddingTop: 'var(--safe-top)', padding: isMobile ? '0 16px' : '0 50px' }}>
         <div className="logo" onClick={() => navigate(ROUTES.LANDING)}>Excel2SQL</div>
         <div className="user-info">
           <span>欢迎, {user?.username || '用户'}</span>
@@ -284,7 +288,10 @@ const Excel2Sql = () => {
           <Title level={2}>上传 Excel 文件并配置转换</Title>
           <Paragraph type="secondary">支持格式：.xlsx, .xls, .csv | 最大文件大小：100MB</Paragraph>
 
-          <div className="db-form-row">
+          <div className="db-form-row"
+            style={{
+              flexDirection: isMobile ? 'column' : 'row', alignItems: isMobile ? 'stretch' : 'center'
+            }}>
             <span className="db-form-label">数据库类型</span>
             <Select
               className="db-select"
@@ -295,7 +302,7 @@ const Excel2Sql = () => {
             />
           </div>
 
-          <Dragger {...uploadProps} className="upload-dragger">
+          <Dragger {...uploadProps} className="upload-dragger" style={{ width: '100%' }}>
             <p className="ant-upload-drag-icon"><InboxOutlined /></p>
             <p className="ant-upload-text">点击或拖拽文件到此区域上传</p>
             <p className="ant-upload-hint">可批量上传；未填写表名时默认取文件名（去扩展名）</p>
@@ -304,19 +311,24 @@ const Excel2Sql = () => {
           {fileList.length > 0 && (
             <div className="file-list-section">
               <Title level={4}>已选择的文件 ({fileList.length})</Title>
-              <Table columns={columns} dataSource={fileList} rowKey="uid" pagination={false} size="small" />
+              <Table columns={columns}
+                dataSource={fileList}
+                rowKey="uid"
+                pagination={false} scroll={{ x: 'max-content' }}
+                size={isMobile ? 'small' : 'middle'} />
 
-              <Space style={{ marginTop: 16 }}>
+              <Space style={{ marginTop: 16 }} direction={isMobile ? 'vertical' : 'horizontal'}>
                 <Button
                   type="primary"
                   icon={<UploadOutlined />}
                   onClick={handleUpload}
                   loading={uploading}
                   disabled={fileList.length === 0 || !dbType}
+                  block={isMobile}
                 >
                   {uploading ? '上传中...' : '开始上传'}
                 </Button>
-                <Button icon={<DeleteOutlined />} onClick={handleClear} disabled={uploading}>
+                <Button icon={<DeleteOutlined />} onClick={handleClear} disabled={uploading} block={isMobile}>
                   清空列表
                 </Button>
               </Space>
